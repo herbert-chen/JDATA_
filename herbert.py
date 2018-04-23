@@ -139,20 +139,23 @@ feature_list = [feature for feature in test_data.columns if feature not in cols_
 # xgboost参数
 params = {'booster': 'gbtree',
           'objective': 'binary:logistic',
-          'gamma': 0.05,
+          'gamma': 0.025,
           'min_child_weight': 6,
-          'max_depth': 10,
+          'max_depth': 7,
           'lambda': 1,
           'subsample': 0.7,
           'colsample_bytree': 0.6,
           'eta': 0.1,
-          'max_delta_step': 0.8,
-          # 'scale_pos_weight': 4,
+          'seed': 0,
+          'max_delta_step': 0.5,
+          'silent': 0,
+          'scale_pos_weight': 4,
           }
+          
 # 输出
 train_xgb = xgb.DMatrix(train_data[feature_list].values, train_data['label'])
 test_xgb = xgb.DMatrix(test_data[feature_list].values)
-model_xgb = xgb.train(params, train_xgb, num_boost_round=300)
+model_xgb = xgb.train(params, train_xgb, num_boost_round=500)
 test_y_xgb = model_xgb.predict(test_xgb)
 
 result = test_data[['user_id']]
