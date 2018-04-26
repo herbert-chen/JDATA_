@@ -50,11 +50,15 @@ def score(pred, real):
 # def main(evaluate=False):
 evaluate = False
 train_month = 4 - int(evaluate)
-train_data = order[order['month'] == train_month]
 if evaluate:
     train_action = action[action['month'] != 3][action['month'] != 4]
 else:
     train_action = action[action['month'] != 4]
+    
+# 构建训练集：是首次购买日期，所以训练集只取训练月份最早购买的那一天
+train_data = order[order['month'] == train_month][['user_id', 'o_date', 'cate']].sort_values(by=['user_id', 'o_date']).drop_duplicates()
+train_data = train_data.drop(train_data[train_data[['user_id', 'cate']].duplicated()].index, axis=0)
+train_data = pd.merge(train_data, basic_info, on='user_id', how='left')
 
 # 增加训练集负样本
 print('creating train dataset')
