@@ -171,6 +171,6 @@ result = result.drop(result[result[['user_id']].duplicated()].index, axis=0)
 if evaluate:
     real_result = order[order['month'] == train_month + 1][['user_id', 'o_date']].sort_values(by=['user_id', 'o_date']).drop_duplicates()
     real_result = real_result.drop(real_result[real_result[['user_id']].duplicated()].index, axis=0)
-    score(result, real_result)
+    score(result[:50000], real_result)
 else:
     result[['user_id', 'pred_date']][:50000].to_csv('./result.csv', index=None)
